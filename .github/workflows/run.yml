@@ -8,13 +8,13 @@ on:
 
 jobs:
   python-tests:
-    uses: ORGANIZATION/workflows/.github/workflows/run-python-tests.yml@master
+    uses: julenbadiola/workflows/.github/workflows/run-python-tests.yml@master
     with:
       python-version: '3.9'
 
   sonarqube-check:
     needs: python-tests
-    uses: ORGANIZATION/workflows/.github/workflows/run-sonarqube-python.yml@master
+    uses: julenbadiola/workflows/.github/workflows/run-sonarqube-python.yml@master
     with:
       sonarqube-project-key: 'example-app'
       sonarqube-host-url: ${{ secrets.SONARQUBE_HOST_URL }}
@@ -24,7 +24,7 @@ jobs:
 
   deploy-with-terraform:
     needs: sonarqube-check
-    uses: ORGANIZATION/workflows/.github/workflows/run-deploy-with-terraform.yml@master
+    uses: julenbadiola/workflows/.github/workflows/run-deploy-with-terraform.yml@master
     with:
       terraform-version: '1.0.11'  # Ejemplo de input, especifica la versión
       environment: 'production'    # Especifica el entorno de despliegue
