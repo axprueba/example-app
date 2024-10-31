@@ -20,6 +20,7 @@ jobs:
     with:
       sonarqube-project-key: 'example-app'
       python-version: '3.9'
+      tests-command: 'coverage run -m pytest && coverage xml -o coverage.xml' 
     secrets:
       SONARQUBE_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
       SONARQUBE_HOST_URL: ${{ secrets.SONARQUBE_HOST_URL }}
