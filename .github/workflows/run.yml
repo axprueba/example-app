@@ -15,7 +15,7 @@ jobs:
   #     python-version: '3.9'
 
   sonarqube-check:
-    needs: python-tests
+    # needs: python-tests
     uses: julenbadiola/workflows/.github/workflows/run-sonarqube-python.yml@master
     with:
       sonarqube-project-key: 'example-app'
