@@ -21,8 +21,9 @@ jobs:
       sonarqube-project-key: 'example-app'
       python-version: '3.9'
     secrets:
+      SONARQUBE_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
       SONARQUBE_HOST_URL: ${{ secrets.SONARQUBE_HOST_URL }}
-      
+
   deploy-with-terraform:
     needs: sonarqube-check
     uses: julenbadiola/workflows/.github/workflows/run-deploy-with-terraform.yml@master
