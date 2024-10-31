@@ -19,17 +19,17 @@ jobs:
     uses: julenbadiola/workflows/.github/workflows/run-sonarqube-python.yml@master
     with:
       sonarqube-project-key: 'example-app'
-      sonarqube-host-url: ${{ secrets.SONARQUBE_HOST_URL }}
       python-version: '3.9'
     secrets:
+      SONARQUBE_HOST_URL: ${{ secrets.SONARQUBE_HOST_URL }}
       SONARQUBE_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
 
   deploy-with-terraform:
     needs: sonarqube-check
     uses: julenbadiola/workflows/.github/workflows/run-deploy-with-terraform.yml@master
     with:
-      terraform-version: '1.0.11'  # Ejemplo de input, especifica la versión
-      environment: 'production'    # Especifica el entorno de despliegue
+      terraform-version: '1.0.11'  # Specify the version
+      environment: 'production'    # Specify the deployment environment
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
