@@ -10,13 +10,13 @@ on:
 
 jobs:
   # python-tests:
-  #   uses: julenbadiola/workflows/.github/workflows/run-python-tests.yml@master
+  #   uses: axprueba/workflows/.github/workflows/run-python-tests.yml@master
   #   with:
   #     python-version: '3.9'
 
   sonarqube-check:
     # needs: python-tests
-    uses: julenbadiola/workflows/.github/workflows/run-sonarqube-python.yml@master
+    uses: axprueba/workflows/.github/workflows/run-sonarqube-python.yml@master
     with:
       sonarqube-project-key: 'example-app'
       python-version: '3.9'
@@ -27,7 +27,7 @@ jobs:
 
   deploy-with-terraform:
     needs: sonarqube-check
-    uses: julenbadiola/workflows/.github/workflows/run-deploy-with-terraform.yml@master
+    uses: axprueba/workflows/.github/workflows/run-deploy-with-terraform.yml@master
     with:
       terraform-version: '1.0.11'  # Specify the version
       environment: 'production'    # Specify the deployment environment
