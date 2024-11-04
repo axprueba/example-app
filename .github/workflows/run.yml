@@ -14,19 +14,20 @@ jobs:
   #   with:
   #     python-version: '3.9'
 
-  sonarqube-check:
+  sonarqube-run:
     # needs: python-tests
     uses: axprueba/workflows/.github/workflows/run-sonarqube-python.yml@master
     with:
       sonarqube-project-key: 'example-app'
       python-version: '3.9'
-      tests-command: 'coverage run -m pytest && coverage xml -o coverage.xml' 
+      tests-command: 'coverage run -m pytest && coverage xml -o coverage.xml'
+      check-result: 'true'
     secrets:
       SONARQUBE_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
       SONARQUBE_HOST_URL: ${{ secrets.SONARQUBE_HOST_URL }}
 
   deploy-with-terraform:
-    needs: sonarqube-check
+    needs: sonarqube-run
     uses: axprueba/workflows/.github/workflows/run-deploy-with-terraform.yml@master
     with:
       terraform-version: '1.0.11'  # Specify the version
