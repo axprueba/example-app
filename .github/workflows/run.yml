@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: Debug
         run: |
-          echo "Github ref: ${{ github.ref }}"
+          echo "Github ref is: ${{ github.ref }}"
 
   python-tests:
     uses: axprueba/workflows/.github/workflows/run-python-tests.yml@master
@@ -27,18 +27,18 @@ jobs:
       python-version: '3.9'
 
 
-  sonarqube-run:
+  sonar-run:
     # needs: python-tests
-    uses: axprueba/workflows/.github/workflows/run-sonarqube-python.yml@master
+    uses: axprueba/workflows/.github/workflows/run-sonar-python.yml@master
     with:
       environment: ${{ github.ref }}
-      sonarqube-project-key: 'example-app'
+      sonar-project-key: 'example-app'
       python-version: '3.9'
       tests-command: 'coverage run -m pytest && coverage xml -o coverage.xml'
       check-result: true
 
   # deploy-with-terraform:
-  #   needs: sonarqube-run
+  #   needs: sonar-run
   #   uses: axprueba/workflows/.github/workflows/run-deploy-with-terraform.yml@master
   #   with:
   #     terraform-version: '1.0.11'  # Specify the version
