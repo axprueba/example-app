@@ -1,0 +1,28 @@
+name: Deploy MkDocs
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'         # Trigger when any file in the docs folder changes
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+
+      - name: Install MkDocs
+        working-directory: docs
+        run: pip install -r requirements.txt
+
+      - name: Deploy to GitHub Pages
+        working-directory: docs
+        run: mkdocs gh-deploy --force
