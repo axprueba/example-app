@@ -3,11 +3,14 @@ name: Deploy MkDocs
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'docs/**'
       - 'mkdocs.yml'
   workflow_dispatch:
+
+permissions:
+  contents: write  # Grant GitHub Actions write permission
 
 jobs:
   deploy:
@@ -21,9 +24,8 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install dependencies
-        working-directory: docs
-        run: pip install -r requirements.txt
+      - name: Install MkDocs
+        run: pip install mkdocs-material
 
       - name: Deploy to GitHub Pages
-        run: mkdocs gh-deploy --force
+        run: mkdocs gh-deploy --force --verbose
