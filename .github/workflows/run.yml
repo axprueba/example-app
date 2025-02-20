@@ -12,18 +12,20 @@ on:
   # Allow manual triggering
   workflow_dispatch:
 
+env:
+  ENVIRONMENT: 'production'
 jobs:
   debug:
     runs-on: ubuntu-latest
     steps:
       - name: Debug
         run: |
-          echo "Github ref is: ${{ github.ref }}"
+          echo "Github ref is: ${{ github.base_ref }}"
 
   python-tests:
     uses: axprueba/workflows/.github/workflows/run-python-tests.yml@master
     with:
-      environment: ${{ github.ref }}
+      environment: ${{ github.base_ref }}
       python-version: '3.9'
 
 
@@ -31,7 +33,7 @@ jobs:
     # needs: python-tests
     uses: axprueba/workflows/.github/workflows/run-sonar-python.yml@master
     with:
-      environment: ${{ github.ref }}
+      environment: ${{ github.base_ref }}
       sonar-project-key: 'example-app'
       python-version: '3.9'
       tests-command: 'coverage run -m pytest && coverage xml -o coverage.xml'
