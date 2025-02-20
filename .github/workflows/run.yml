@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Debug Output
-        run: echo "Resolved Environment: ${{ needs.set-environment.outputs.ENVIRONMENT }}"
+        run: echo "Resolved Environment ${{ needs.set-environment.outputs.ENVIRONMENT }}"
 
   python-tests:
     needs: set-environment
