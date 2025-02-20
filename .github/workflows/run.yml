@@ -27,6 +27,7 @@ jobs:
     with:
       environment: $GITHUB_REF_NAME
       python-version: '3.9'
+    secrets: inherit
 
 
   sonar-run:
@@ -38,6 +39,7 @@ jobs:
       python-version: '3.9'
       tests-command: 'coverage run -m pytest && coverage xml -o coverage.xml'
       check-result: true
+    secrets: inherit
 
   # deploy-with-terraform:
   #   needs: sonar-run
