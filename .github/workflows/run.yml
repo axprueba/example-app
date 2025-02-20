@@ -9,44 +9,58 @@ on:
       - 'mkdocs.yml'
       - '.github/workflows/docs.yml'
   pull_request:
-  # Allow manual triggering
   workflow_dispatch:
 
-env:
-  ENVIRONMENT: 'production'
 jobs:
+  set-environment:
+    runs-on: ubuntu-latest
+    outputs:
+      ENVIRONMENT: ${{ steps.set-env.outputs.ENVIRONMENT }}
+    steps:
+      - name: Determine Environment
+        id: set-env
+        run: |
+          if [[ "$GITHUB_REF_NAME" == "main" ]]; then
+            echo "ENVIRONMENT=production" >> $GITHUB_ENV
+            echo "ENVIRONMENT=production" >> $GITHUB_OUTPUT
+          elif [[ "$GITHUB_REF_NAME" == "qa" ]]; then
+            echo "ENVIRONMENT=qa" >> $GITHUB_ENV
+            echo "ENVIRONMENT=qa" >> $GITHUB_OUTPUT
+          else
+            echo "ENVIRONMENT=develop" >> $GITHUB_ENV
+            echo "ENVIRONMENT=develop" >> $GITHUB_OUTPUT
+          fi
+
   debug:
+    needs: set-environment
     runs-on: ubuntu-latest
     steps:
-      - name: Debug
-        run: |
-          echo "Github ref is: $GITHUB_REF_NAME"
+      - name: Debug Output
+        run: echo "Resolved Environment: ${{ needs.set-environment.outputs.ENVIRONMENT }}"
 
   python-tests:
+    needs: set-environment
     uses: axprueba/workflows/.github/workflows/run-python-tests.yml@master
     with:
-      environment: $GITHUB_REF_NAME
       python-version: '3.9'
     secrets: inherit
 
-
   sonar-run:
-    # needs: python-tests
+    needs: [set-environment, python-tests]
     uses: axprueba/workflows/.github/workflows/run-sonar-python.yml@master
     with:
-      environment: $GITHUB_REF_NAME
-      sonar-project-key: 'example-app'
+      sonar-project-key: ${{ github.event.repository.name }}-${{ github.ref_name }}
       python-version: '3.9'
       tests-command: 'coverage run -m pytest && coverage xml -o coverage.xml'
       check-result: true
     secrets: inherit
 
-  # deploy-with-terraform:
-  #   needs: sonar-run
-  #   uses: axprueba/workflows/.github/workflows/run-deploy-with-terraform.yml@master
-  #   with:
-  #     terraform-version: '1.0.11'  # Specify the version
-  #     environment: 'production'    # Specify the deployment environment
-  #   secrets:
-  #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  deploy-with-terraform:
+    needs: [set-environment, sonar-run]
+    uses: axprueba/workflows/.github/workflows/run-deploy-with-terraform.yml@master
+    with:
+      terraform-version: '1.0.11'
+      environment: ${{ needs.set-environment.outputs.ENVIRONMENT }}
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
