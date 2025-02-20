@@ -4,8 +4,11 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - 'docs/**'       # Ignore all changes in the docs folder
+      - 'mkdocs.yml'    # Ignore changes to the MkDocs configuration
   pull_request:
-  # allow manual triggering
+  # Allow manual triggering
   workflow_dispatch:
 
 jobs:
@@ -26,12 +29,12 @@ jobs:
       SONARQUBE_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
       SONARQUBE_HOST_URL: ${{ secrets.SONARQUBE_HOST_URL }}
 
-  deploy-with-terraform:
-    needs: sonarqube-run
-    uses: axprueba/workflows/.github/workflows/run-deploy-with-terraform.yml@master
-    with:
-      terraform-version: '1.0.11'  # Specify the version
-      environment: 'production'    # Specify the deployment environment
-    secrets:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  # deploy-with-terraform:
+  #   needs: sonarqube-run
+  #   uses: axprueba/workflows/.github/workflows/run-deploy-with-terraform.yml@master
+  #   with:
+  #     terraform-version: '1.0.11'  # Specify the version
+  #     environment: 'production'    # Specify the deployment environment
+  #   secrets:
+  #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
