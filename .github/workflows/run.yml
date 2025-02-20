@@ -20,12 +20,12 @@ jobs:
     steps:
       - name: Debug
         run: |
-          echo "Github ref is: $GITHUB_HEAD_REF"
+          echo "Github ref is: $GITHUB_REF_NAME"
 
   python-tests:
     uses: axprueba/workflows/.github/workflows/run-python-tests.yml@master
     with:
-      environment: $GITHUB_HEAD_REF
+      environment: $GITHUB_REF_NAME
       python-version: '3.9'
 
 
@@ -33,7 +33,7 @@ jobs:
     # needs: python-tests
     uses: axprueba/workflows/.github/workflows/run-sonar-python.yml@master
     with:
-      environment: $GITHUB_HEAD_REF
+      environment: $GITHUB_REF_NAME
       sonar-project-key: 'example-app'
       python-version: '3.9'
       tests-command: 'coverage run -m pytest && coverage xml -o coverage.xml'
